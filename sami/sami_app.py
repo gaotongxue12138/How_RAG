@@ -9,11 +9,11 @@ from langchain import hub
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain.tools.retriever import create_retriever_tool
 from langchain.callbacks import AsyncIteratorCallbackHandler
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ["OPENAI_API_KEY"] = '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'
 
 #openai.api_key = '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'
 embeddings = OpenAIEmbeddings()
-db = FAISS.load_local("./yiwu/", embeddings)
+db = FAISS.load_local("./test_218/", embeddings)
 retriever = db.as_retriever(search_kwargs={"k": 3})
 
 
@@ -21,12 +21,11 @@ prompt = hub.pull("hwchase17/openai-tools-agent")
 tool = create_retriever_tool(
     retriever,
     "search",
-    "当用户提问义乌时，需要调用此工具查询相关信息",
+    "当用户提问义乌和商品时，需要调用此工具查询相关信息",
 )
 tools = [tool]
 
 llm = ChatOpenAI(temperature=0)
-
 
 agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools)
